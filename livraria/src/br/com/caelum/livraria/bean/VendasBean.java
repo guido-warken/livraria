@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.annotation.PostConstruct;
+
 import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.BarChartSeries;
 import org.primefaces.model.chart.ChartSeries;
@@ -14,7 +16,13 @@ import br.com.caelum.livraria.modelo.Venda;
 
 public class VendasBean {
 
-	public List<Venda> getVendas() {
+	private BarChartModel vendasModel;
+
+	public BarChartModel getVendasModel() {
+		return vendasModel;
+	}
+
+	private List<Venda> getVendas() {
 		List<Livro> livros = new DAO<Livro>(Livro.class).listaTodos();
 		List<Venda> vendas = new ArrayList();
 		Random random = new Random(1234);
@@ -25,7 +33,7 @@ public class VendasBean {
 		return vendas;
 	}
 
-	public BarChartModel getVendasModel() {
+	private BarChartModel initVendasModel() {
 		BarChartModel model = new BarChartModel();
 		ChartSeries vendasSerie = new ChartSeries();
 		vendasSerie.setLabel("Vendas 2019");
@@ -35,6 +43,11 @@ public class VendasBean {
 		}
 		model.addSeries(vendasSerie);
 		return model;
+	}
+
+	@PostConstruct
+	private void createVendasModel() {
+		this.vendasModel = initVendasModel();
 	}
 
 }
